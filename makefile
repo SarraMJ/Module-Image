@@ -39,4 +39,5 @@ docs: doc/image.doxy
 	doxygen doc/image.doxy
 
 clean:
-	rm -rf obj/* bin/* doc/html callgrind.out.*
+	rm -rf obj/* bin/* data/image*.ppm doc/html callgrind.out.*
+	

@@ -10,33 +10,23 @@ using namespace std;
  * @brief  LIFAPCD
  * @author Sarra Mejri p2101522, Maya Soufan p2102583
  * 
+ * \class Image
  */
 
 
-
-
-
-
-/**
- * @brief Constructeur par défaut de la classe: initialise dimx et dimy à 0
-*/
 Image::Image(){
-    
+   
     dimx=0; 
     dimy=0;
     tab = nullptr;
 }
 
-/**
- * @brief onstructeur de la classe: initialise dimx et dimy (après vérification) puis alloue le tableau de pixel dans le tas (image noire)
- * 
- * @param[in] dimensionX 
- * @param[in] dimensionY 
- */
+
 
 Image::Image (unsigned int dimensionX, unsigned int dimensionY) {
+
     assert(dimensionX> 0 && dimensionY> 0);
-    dimx = dimensionX;
+    dimx = dimensionX; 
     dimy = dimensionY;
     tab = new Pixel[dimx*dimy]; 
     Pixel p;
@@ -45,36 +35,27 @@ Image::Image (unsigned int dimensionX, unsigned int dimensionY) {
     }
 }
 
-/**
- *  @brief Destructeur de la classe: déallocation de la mémoire du tableau de pixels et mise à jour des champs dimx et dimy à 0
- * 
- */
+
 Image::~Image () {
     dimx = 0;
     dimy = 0;
-    delete [] tab;
-    tab = nullptr;
+    if (tab != nullptr) {
+        delete [] tab;
+        tab = nullptr;  
+    }
+
 }
-/**
- * @brief Accesseur : récupère le pixel original de coordonnées (x,y) en vérifiant leur validité la formule pour passer d'un tab 2D à un tab 1D est tab[y*dimx+x]
- * 
- * @param[in] x 
- * @param[in] y 
- * @return Pixel& 
- */
+
+
 Pixel & Image::getPix(unsigned int x, unsigned int y) const {
    assert(x < dimx );
+   assert(x>= 0);
+   assert(y>= 0);
    assert(y < dimy);
    return tab[y*dimx+x]; 
 } 
 
-/**
- *  @brief  Mutateur : modifie le pixel de coordonnées (x,y)
- * 
- * @param[in] x 
- * @param[in] y 
- * @param[in] couleur 
- */
+
 void Image::setPix(unsigned int x, unsigned int y,  const Pixel & couleur) {
     assert( x >= 0 && x < dimx);
     assert(y >= 0 && y < dimy);
@@ -84,16 +65,6 @@ void Image::setPix(unsigned int x, unsigned int y,  const Pixel & couleur) {
 }
 
 
- /**
-  * @brief Dessine un rectangle plein de la couleur dans l'image (en utilisant setPix, indices en paramètre compris) 
-
-  * 
-  * @param[in] Xmin 
-  * @param[in] Ymin 
-  * @param[in] Xmax 
-  * @param[in] Ymax 
-  * @param[in] couleur 
-  */
 void Image::dessinerRectangle(unsigned int Xmin, unsigned int Ymin, unsigned int Xmax,unsigned int Ymax, const Pixel & couleur)  {
     for (unsigned int i = Xmin; i<= Xmax; i++) {
         for (unsigned int j = Ymin; j <= Ymax; j++) {
@@ -103,20 +74,13 @@ void Image::dessinerRectangle(unsigned int Xmin, unsigned int Ymin, unsigned int
 }
 
 
-/**
- * @brief Efface l'image en la remplissant de la couleur en paramètre (en appelant dessinerRectangle avec le bon rectangle)
- * 
- * @param[in] couleur 
- */
+
 void Image::effacer(const Pixel & couleur) {
         dessinerRectangle(0,0,dimx-1, dimy-1, couleur);
 }
 
 
-/**
- * @brief Effectue une série de tests vérifiant que le module fonctionne et que les données membres de l'objet sont conformes
- * 
- */
+
 void Image::testRegression() {
     
     //test constructeur par défaut 
@@ -134,23 +98,27 @@ void Image::testRegression() {
     assert( image_test.tab!=nullptr );
     
    for(unsigned int i=0;i<image_test.dimx ; i++)
-      for(unsigned int j=0;j<image_test.dimy; j++)
+   {
+    for(unsigned int j=0;j<image_test.dimy; j++)
       {
           assert(image_test.getPix(i, j).getRouge()==0 && image_test.getPix(i,j).getVert() == 0 
           && image_test.getPix(i,j).getBleu()==0);   // car une image en sortie du constructeur doit être toute noire
       } 
+   }
+    
 
   //  test GetPix
     
-    assert( image_test.getPix(image_test.dimx - 1, 0).getRouge() == image_test.tab[image_test.dimx-1].getRouge()
-         && image_test.getPix(image_test.dimx -1 , 0).getVert() == image_test.tab[image_test.dimx-1].getVert()
-         && image_test.getPix(image_test.dimx  -1, 0).getBleu() == image_test.tab[image_test.dimx-1].getBleu()); 
-         // verifie le coordonées de (test_getPix.dimx,0) dans le tableau (dimx - 1 pour indice tab)
+    //test coordonées (0,0)
+    assert(image_test.getPix(0,0).getRouge() == image_test.tab[0].getRouge());
+    assert(image_test.getPix(0,0).getVert() == image_test.tab[0].getVert());
+    assert(image_test.getPix(0,0).getBleu() == image_test.tab[0].getBleu());
+    
 
-    image_test.getPix(0, image_test.dimy ); // verifie le coordonées de (0,test_getPix.dimy) dans le tableau 
-     assert( image_test.getPix(image_test.dimy -1 , 0).getRouge() == image_test.tab[(image_test.dimy -1)*image_test.dimx].getRouge()
-         && image_test.getPix(image_test.dimy -1, 0).getVert() == image_test.tab[(image_test.dimy -1)*image_test.dimx].getVert()
-         && image_test.getPix(image_test.dimy -1, 0).getBleu() == image_test.tab[(image_test.dimy -1)*image_test.dimx].getBleu());
+    //test coordonnées (dimx, dimy)
+    assert(image_test.getPix(image_test.dimx-1,image_test.dimy-1).getRouge() == image_test.tab[image_test.dimx*image_test.dimy-1].getRouge());
+    assert(image_test.getPix(image_test.dimx-1,image_test.dimy-1).getVert() == image_test.tab[image_test.dimx*image_test.dimy-1].getVert());
+    assert(image_test.getPix(image_test.dimx-1,image_test.dimy-1).getBleu() == image_test.tab[image_test.dimx*image_test.dimy-1].getBleu());
 
     // test modifier la couleur avec getPix et SetPix 
 
@@ -166,8 +134,10 @@ void Image::testRegression() {
     Pixel c(125,167,89);
     image_test.dessinerRectangle(20,20,50,50,c);
 
-    for (unsigned int i = 20; i <= 50; i++) {
-        for (unsigned int j =20; j<= 50 ; j++) {
+    for (unsigned int i = 20; i <= 50; i++) 
+    {
+        for (unsigned int j =20; j<= 50 ; j++) 
+        {
                     assert(image_test.getPix(i,j).getRouge() == 125
                     && image_test.getPix(i,j).getVert()==167
                     && image_test.getPix(i,j).getBleu()==89);
@@ -179,8 +149,10 @@ void Image::testRegression() {
 
     Pixel couleur2(170,200,180);
     image_test.effacer(couleur2);
-     for ( unsigned int i = 0; i < image_test.dimx; i++) {
-        for (unsigned int j = 0; j < image_test.dimy; j++) {
+     for ( unsigned int i = 0; i < image_test.dimx; i++) 
+     {
+        for (unsigned int j = 0; j < image_test.dimy; j++) 
+        {
                     assert(image_test.getPix(i,j).getRouge() == 170
                     && image_test.getPix(i,j).getVert()==200
                     && image_test.getPix(i,j).getBleu()==180);
@@ -191,11 +163,7 @@ void Image::testRegression() {
 }
 
 
-/**
- * @brief 
- * 
- * @param[in] filename 
- */
+
 void Image::sauver(const std::string & filename) const {
     ofstream fichier (filename.c_str());
     assert(fichier.is_open());
@@ -211,11 +179,7 @@ void Image::sauver(const std::string & filename) const {
     fichier.close();
 }
 
-/**
- * @brief 
- * 
- * @param[in] filename 
- */
+
 void Image::ouvrir(const std::string & filename) {
     ifstream fichier (filename.c_str());
     assert(fichier.is_open());
@@ -238,10 +202,7 @@ void Image::ouvrir(const std::string & filename) {
 }
 
 
-/**
- * @brief 
- * 
- */
+
 void Image::afficherConsole(){
     cout << dimx << " " << dimy << endl;
     for(unsigned int y=0; y<dimy; ++y) {
@@ -253,10 +214,7 @@ void Image::afficherConsole(){
     }
 }
 
-/**
- * @brief initialisation de la fenêtre sdl2
- * 
- */
+
 void Image::afficherInit() {
 if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         cout << "Erreur lors de l'initialisation de la SDL : " << SDL_GetError() << endl;
@@ -264,11 +222,6 @@ if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         exit(1);
     }
 
-    if (TTF_Init() != 0) {
-        cout << "Erreur lors de l'initialisation de la SDL_ttf : " << TTF_GetError() << endl;
-        SDL_Quit();
-        exit(1);
-    }
 
     int imgFlags = IMG_INIT_PNG | IMG_INIT_JPG;
     if( !(IMG_Init(imgFlags) & imgFlags)) {
@@ -283,8 +236,8 @@ if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         SDL_Quit(); 
         exit(1);
     }
-    //SDL_Renderer * renderer;
     renderer = SDL_CreateRenderer(window,-1,SDL_RENDERER_ACCELERATED);
+
 	//Remplir l'écran de gris clair
     SDL_SetRenderDrawColor(renderer, 192,192,192,255);
     SDL_RenderClear(renderer);
@@ -292,10 +245,12 @@ if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 
 
 void Image::afficherBoucle() {
+    
     SDL_Event events;
-	bool quit = false;
+	bool quit = false; 
+    float zoom = 1; 
 
-	// tant que ce n'est pas la fin ...
+    // tant que ce n'est pas la fin ...
 	while (!quit) {
 
 
@@ -306,45 +261,55 @@ void Image::afficherBoucle() {
 				switch (events.key.keysym.scancode) {
 				case SDL_SCANCODE_T:
 					 {
-                        SDL_Rect viewport = {0, 0, 200, 200};
-                        SDL_RenderSetViewport(renderer, &viewport);
-                        SDL_RenderSetScale(renderer, 20, 20);
+                        zoom = zoom * 1.5;
+
                      }
 					break;
 				case SDL_SCANCODE_G:
 					    {
-                        SDL_Rect viewport = {0, 0, 200, 200};
-                        SDL_RenderSetViewport(renderer, &viewport);
-                        SDL_RenderSetScale(renderer, -20, -20);
+                        zoom = zoom * 0.5; 
+                       
                         }
 					break;
                 case SDL_SCANCODE_ESCAPE:
                     quit = true;
+
                     break;
 				default: break;
 				}
 			}
 		}
 
-		// on affiche l'image sur le buffer cach
-        for (unsigned int i = 0; i<dimx; i++ ) {
-            for (unsigned int j =0; j<dimy; j++) {
-                // Choisis la couleur du 
-            SDL_SetRenderDrawColor(renderer, getPix(i,j).getRouge(), getPix(i,j).getVert(), getPix(i,j).getBleu(), 255);
-            // Draw a red pixel at (100, 100)
-            SDL_RenderDrawPoint(renderer, i, j);
-            }
-        }
+ 
+	
+        float xcenter = ((200 - (dimx * zoom))/ 2); //calcule la coordonnée x du centre de l'image 
+        float ycenter = ((200 - (dimy * zoom))/ 2); //calcule la coordonnée y du centre de l'image 
+        for (unsigned int i = 0; i <dimx; i++) {
+                            for (unsigned int j=0; j<dimy; j++) {
+                                Pixel pi = getPix(i, j);
+                                SDL_SetRenderDrawColor(renderer, pi.getRouge(), pi.getVert(), pi.getBleu(), 255);
+                                SDL_Rect zoomy; 
+                                zoomy.h = zoom;
+                                zoomy.w = zoom;
+                                zoomy.x = (float)(i*zoom+xcenter);
+                                zoomy.y= (float)(j*zoom+ycenter);
+                                SDL_RenderFillRect(renderer, &zoomy); 
+                            }
+                        }
+
 
 		//affiche
+        
         SDL_RenderPresent(renderer);
+        SDL_RenderClear(renderer);
+
 	}
 }
 
 void Image::afficherDetruit() {
-    TTF_Quit();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    IMG_Quit();
     SDL_Quit();
 }
 

@@ -3,6 +3,10 @@
 #ifndef _PIXEL_H
 #define _PIXEL_H
 
+/**
+ * \class Pixel 
+ * 
+ */
 class Pixel {
 
  private :
@@ -11,28 +15,71 @@ class Pixel {
 
  public :
 
-   // Constructeur par défaut de la classe: initialise le pixel à la couleur noire
+
+
+
+/**
+ * @brief Constructeur par défaut de la classe
+ * Initialise le pixel à la couleur noire
+ * 
+ */
     Pixel ();
 
-   // Constructeur de la classe: initialise r,g,b avec les paramètres
+/**
+ * @brief Constructeur de la classe
+ * Initialise r,g,b avec les paramètres
+ * 
+ * @param[in] nr 
+ * @param[in] ng 
+ * @param[in] nb 
+ */
     Pixel (unsigned char nr, unsigned char ng, unsigned char nb);
 
-   // Accesseur : récupère la composante rouge du pixel
+/**
+ * @brief Accesseur 
+ * Récupère la composante rouge du pixel
+ * 
+ * @return unsigned char 
+ */
    unsigned char getRouge ()const;
 
-   // Accesseur : récupère la composante verte du pixel
+/**
+ * @brief   Accesseur 
+ * Récupère la composante verte du pixel 
+ * @return unsigned char 
+ */
    unsigned char getVert ()const; 
 
-   // Accesseur : récupère la composante bleue du pixel
+/**
+ * @brief  Accesseur 
+ * Récupère la composante bleue du pixel
+ * @return unsigned char 
+ */
    unsigned char getBleu () const; 
 
-   // Mutateur : modifie la composante rouge du pixel
+/**
+ * @brief Mutateur 
+ * Modifie la composante rouge du pixel
+ * @param[in] nr
+ */
    void setRouge (unsigned char nr);
 
-   // Mutateur : modifie la composante verte du pixel
+   
+   /**
+    * @brief Mutateur
+    * Modifie la composante verte du pixel
+    * 
+    * @param[in] ng 
+    */
    void setVert (unsigned char ng);
 
-   // Mutateur : modifie la composante bleue du pixel
+   
+   /**
+    * @brief Mutateur 
+    * Modifie la composante bleue du pixel
+    * 
+    * @param[in] nb 
+    */
    void setBleu (unsigned char nb);
 
 };
